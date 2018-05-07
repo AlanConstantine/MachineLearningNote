@@ -20,10 +20,12 @@ def load_Dataset(filename):
             lineArr.append(float(curLine[i]))
         dataMat.append(lineArr)
         labelMat.append(float(curLine[-1]))
-    return np.mat(dataMat), np.mat(labelMat)
+    return dataMat, labelMat
 
 
-def normal_equation(Xmat, Ymat):
+def normal_equation(X, Y):
+    Xmat = np.mat(X)
+    Ymat = np.mat(Y)
     YT = Ymat.T
     xTx = Xmat.T.dot(Xmat)
     if np.linalg.det(xTx) == 0:
@@ -31,27 +33,45 @@ def normal_equation(Xmat, Ymat):
     return xTx.I * Xmat.T * YT
 
 
-def use_loess(Xmat, Ymat):
-    pass
+def use_loess(testX, X, Y, k):
+    Xmat = np.mat(X)
+    Ymat = np.mat(Y).T
     simpleNum = Xmat.shape[0]
+    Ypre = np.zeros(simpleNum)
     for i in range(simpleNum):
-        pass
+        Ypre[i] = loess(testX[i], Xmat, Ymat, k, simpleNum)
+    return Ypre
 
 
-def show_Data(Xmat, Ymat):
-    # Xcopy = Xmat.copy()
+def loess(testX, Xmat, Ymat, k, simpleNum):
+    weights = np.eye(simpleNum)
+    for j in range(simpleNum):
+        diffMat = testX - Xmat[j, :]
+        weights[j, j] = np.exp(diffMat * diffMat.T / (-2 * (k**2)))
+    XTwX = Xmat.T * (weights * Xmat)
+    theta = XTwX.I * (Xmat.T * (weights * Ymat))
+    return testX * theta
+
+
+def show_Data(X, Y, k):
+    # Xcopy = np.mat(X).copy()
     # Xcopy.sort(0)
-    # ws = normalEquation(Xmat, Ymat)
-    use_loess(Xmat, Ymat)
+    # ws = normal_equation(X, Y)
     # Ypre = Xcopy.dot(ws)
-    # plt.scatter(X[:, 1].flatten().A[0], Ymat.flatten().A[0], c='r')
     # plt.plot(Xcopy[:, 1], Ypre, c='b')
-    # plt.show()
+    plt.scatter(
+        np.mat(X)[:, 1].flatten().A[0], np.mat(Y).flatten().A[0], c='r')
+    Ypre = use_loess(X, X, Y, k)
+    sorti = np.mat(X)[:, 1].argsort(0)
+    Xsort = np.mat(X)[sorti][:, 0, :]
+    plt.plot(Xsort[:, 1], Ypre[sorti])
+    plt.show()
 
 
 def main():
+    k = 0.005
     dataMat, labelMat = load_Dataset('ex1.txt')
-    show_Data(dataMat, labelMat)
+    show_Data(dataMat, labelMat, k)
 
 
 if __name__ == '__main__':
