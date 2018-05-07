@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 
 
 def load_Dataset(filename):
+    """加载数据"""
     numFeat = len(open(filename).readline().split('\t')) - 1
     dataMat = []
     labelMat = []
@@ -24,6 +25,7 @@ def load_Dataset(filename):
 
 
 def normal_equation(X, Y):
+    """正规方程求w"""
     Xmat = np.mat(X)
     Ymat = np.mat(Y)
     YT = Ymat.T
@@ -34,6 +36,7 @@ def normal_equation(X, Y):
 
 
 def use_loess(testX, X, Y, k):
+    """局部加权线性回归"""
     Xmat = np.mat(X)
     Ymat = np.mat(Y).T
     simpleNum = Xmat.shape[0]
@@ -44,13 +47,14 @@ def use_loess(testX, X, Y, k):
 
 
 def loess(testX, Xmat, Ymat, k, simpleNum):
+    """计算每个点的权重weights"""
     weights = np.eye(simpleNum)
     for j in range(simpleNum):
         diffMat = testX - Xmat[j, :]
         weights[j, j] = np.exp(diffMat * diffMat.T / (-2 * (k**2)))
     XTwX = Xmat.T * (weights * Xmat)
-    theta = XTwX.I * (Xmat.T * (weights * Ymat))
-    return testX * theta
+    ws = XTwX.I * (Xmat.T * (weights * Ymat))
+    return testX * ws
 
 
 def show_Data(X, Y, k):
