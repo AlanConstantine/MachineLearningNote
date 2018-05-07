@@ -69,7 +69,7 @@ def show_Data(X, Y, k):
 
 
 def main():
-    k = 0.005
+    k = 0.01
     dataMat, labelMat = load_Dataset('ex1.txt')
     show_Data(dataMat, labelMat, k)
 
