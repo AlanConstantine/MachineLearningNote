@@ -32,9 +32,11 @@ class BuildTree(object):
         att_group = self.dataset.groupby(attribute)
         label_group = att_group[self.features[-1]]
         for a, l in label_group:
-            l_counter = Counter(l)
+            l_counter_dict = Counter(l)
             l_num = len(l)
             print(a, l_counter, l_num)
+            for l, l_counter in l_counter_dict.items():
+                pass
 
     def get_entropy(self):
         for attribute in self.dataset:
