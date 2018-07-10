@@ -5,6 +5,8 @@
 import csv
 import math
 import numpy as np
+import pandas as pd
+from pandas import Series, DataFrame
 from collections import Counter
 from pprint import pprint as pt
 
@@ -14,30 +16,36 @@ def load_data():
     csv_data = list(csv.reader(f))
     f.close()
     dataset = csv_data[1:]
-    features = csv_data[0][1:-1]
+    features = csv_data[0]
     dataset_T = list(zip(*dataset))
-    return dataset, dataset_T[:-1], dataset_T[-1], features
+    return DataFrame(dataset, columns=features), features
 
 
 class BuildTree(object):
-    def __init__(self, dataset, dataset_T, labels, features):
+    def __init__(self, dataset, features):
         self.dataset = dataset
-        self.dataset = dataset_T
-        self.labels = labels
+        self.dataset_T = dataset.T
         self.features = features
 
-    def information_entropy(self, sub_attributes, col):
-        sub_attributes_set = {}
-        for row in range(len(sub_attributes)):
-            attribute = sub_attributes[row]
-            if attribute in sub_attributes:
-                pass
-            else:
-                pass
+    def information_entropy(self, attribute):
+        sub_attribute_entropy = {}
+        att_group = self.dataset.groupby(attribute)
+        label_group = att_group[self.features[-1]]
+        for a, l in label_group:
+            l_counter = Counter(l)
+            l_num = len(l)
+            print(a, l_counter, l_num)
+
+    def get_entropy(self):
+        for attribute in self.dataset:
+            self.information_entropy(attribute)
+            break
 
 
 def main():
-    dataset, dataset_T, labels, features = load_data()
+    dataset, features = load_data()
+    bt = BuildTree(dataset, features)
+    bt.get_entropy()
 
 
 if __name__ == '__main__':
