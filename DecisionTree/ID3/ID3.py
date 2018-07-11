@@ -17,7 +17,6 @@ def load_data():
     f.close()
     dataset = csv_data[1:]
     features = csv_data[0]
-    dataset_T = list(zip(*dataset))
     return DataFrame(dataset, columns=features), features
 
 
@@ -34,14 +33,22 @@ class BuildTree(object):
         for a, l in label_group:
             l_counter_dict = Counter(l)
             l_num = len(l)
-            print(a, l_counter, l_num)
+            entropy = 0
             for l, l_counter in l_counter_dict.items():
-                pass
+                entropy -= (l_counter/l_num)*math.log((l_counter/l_num), 2)
+            sub_attribute_entropy[a] = entropy
+        print(sub_attribute_entropy)
 
     def get_entropy(self):
-        for attribute in self.dataset:
-            self.information_entropy(attribute)
-            break
+        label_counter = Counter(self.dataset[self.features[-1]])
+        label_entropy = 0
+        l_num = len(self.dataset[self.features[-1]])
+        for l, l_counter in label_counter.items():
+            label_entropy -= (l_counter/l_num)*math.log((l_counter/l_num), 2)
+        print(label_entropy)
+        for feature in self.features[:-1]:
+            self.information_entropy(self.dataset[feature])
+            attribute_counter = Counter(self.dataset[feature])
 
 
 def main():
