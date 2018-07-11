@@ -39,7 +39,7 @@ class BuildTree(object):
             sub_attribute_entropy[a] = entropy
         print(sub_attribute_entropy)
 
-    def get_entropy(self):
+    def information_gain(self):
         label_counter = Counter(self.dataset[self.features[-1]])
         label_entropy = 0
         l_num = len(self.dataset[self.features[-1]])
@@ -49,6 +49,9 @@ class BuildTree(object):
         for feature in self.features[:-1]:
             self.information_entropy(self.dataset[feature])
             attribute_counter = Counter(self.dataset[feature])
+
+    def get_entropy():
+        pass
 
 
 def main():
