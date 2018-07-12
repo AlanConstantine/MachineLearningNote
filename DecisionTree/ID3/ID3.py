@@ -25,10 +25,10 @@ class BuildTree(object):
         self.dataset = dataset
         self.dataset_T = dataset.T
         self.features = features
-        self.attribute_num = len(self.dataset[self.features[-1]])
-        self.label_entropy = self.count_label_entropy()
+        # self.attribute_num = len(self.dataset[self.features[-1]])
+        # self.label_entropy = self.count_label_entropy()
 
-    def count_label_entropy(self):
+    def count_label_entropy(self, dataset):
         label_entropy = 0
         label_counter = Counter(self.dataset[self.features[-1]])
         for l, l_counter in label_counter.items():
@@ -36,6 +36,7 @@ class BuildTree(object):
                 math.log((l_counter / self.attribute_num), 2)
         print("label's entropy:", label_entropy)
         return label_entropy
+        # TODO
 
     def information_entropy(self, attribute):
         sub_attribute_entropy = {}
