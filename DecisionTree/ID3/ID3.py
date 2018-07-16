@@ -67,6 +67,7 @@ class BuildTree(object):
         information_gain_dict_sorted = sorted(
             information_gain_dict.items(), key=lambda x: x[1], reverse=True)
         pt(information_gain_dict_sorted[0][0])
+        self.count_entropy()
         # TODO
 
 
