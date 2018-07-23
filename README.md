@@ -2,8 +2,9 @@
 
 使用python实现各种机器学习算法
 
-  操作系统：Windows 10、Ubuntu、 MaxOS
-  Python版本：3.5.3、3.6.2
+操作系统：Windows 10、Ubuntu、 MaxOS
+
+Python版本：3.5.3、3.6.2
 
 现有：
 * [贝叶斯推断](https://github.com/AlanConstantine/MachineLearningNote/tree/master/BayesianInference)
