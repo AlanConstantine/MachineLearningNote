@@ -140,23 +140,23 @@ class MultiTree(object):
                           new_parent.name)
                     print('*' * 30)
 
-    def to_dict(self, show_graph=False):
+    def show_tree(self):
         '''
         利用networkx转换成图结构，方便结合matplotlib将树画出来
         '''
         G = nx.Graph()
-        self.to_dcit_recursion(self.tree, G)
-        if show_graph == True:
-            nx.draw(G, with_labels=True)
-            plt.show()
-        # sp = dict(nx.all_pairs_shortest_path(G))
-        # pt(sp)
+        self.to_graph_recursion(self.tree, G)
+        nx.draw(G, with_labels=True)
+        plt.show()
 
-    def to_dcit_recursion(self, tree, G):
+    def to_graph_recursion(self, tree, G):
+        '''
+        将节点加入到图中
+        '''
         for child in tree.children:
             G.add_nodes_from([tree.name, child.name])
             G.add_edge(tree.name, child.name)
-            self.to_dcit_recursion(child, G)
+            self.to_graph_recursion(child, G)
 
     def if_node_exist_recursion(self, tree, node, search, if_del):
         '''
@@ -220,7 +220,7 @@ def main():
     # T.add(TreeNode('I'), N)
     T.add(A)
     T.modify(A, G)
-    T.to_dict(show_graph=True)
+    T.show_tree()
 
 
 if __name__ == '__main__':
