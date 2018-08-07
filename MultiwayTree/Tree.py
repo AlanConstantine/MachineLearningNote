@@ -153,6 +153,7 @@ class MultiTree(object):
         '''
         将节点加入到图中
         '''
+        G.add_node(tree.name)
         for child in tree.children:
             G.add_nodes_from([tree.name, child.name])
             G.add_edge(tree.name, child.name)
@@ -166,6 +167,8 @@ class MultiTree(object):
         if_del:当检索到该节点时是否删除该节点
         '''
         name = node.name
+        if name == self.tree.name:
+            self.if_node_exist = True
         if self.if_node_exist:
             return 1
         for child in tree.children:
@@ -185,6 +188,9 @@ class MultiTree(object):
         '''
         增加节点时使用的递归函数
         '''
+        if parent == tree.name:
+            tree.children.append(node)
+            return 1
         for child in tree.children:
             if child.name == parent:
                 children_list = child.children

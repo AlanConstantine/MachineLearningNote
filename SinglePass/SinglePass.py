@@ -6,9 +6,7 @@
 # @Email   : rlalan@outlook.com
 # @Blog    : http://blog.csdn.net/AlanConstantineLau
 
-# from reader import readtxt as rt
-# from distance import Edit_distance_array as ed
-# from statistic import orderdic as od
+
 import random
 
 
@@ -90,7 +88,7 @@ def main():
     datapath = r'../BPtest.txt'
     data = readtxt(datapath, 'utf8')
     data = clean_data(data)
-    print single_pass(data)
+    print(single_pass(data))
 
 
 if __name__ == '__main__':

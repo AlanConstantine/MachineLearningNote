@@ -38,7 +38,7 @@ def get_word(email_file):
     word_list = []
     word_set = []
     email_paths = fileWalker(email_file)
-    for email_path in email_paths:]
+    for email_path in email_paths:
         clean_word = email_parser(email_path)
         word_list.append(clean_word)
         word_set.extend(clean_word)
