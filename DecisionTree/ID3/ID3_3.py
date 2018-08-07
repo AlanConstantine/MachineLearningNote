@@ -24,10 +24,11 @@ def load_data():
 
 
 class DecisionTreeNode(Tree.TreeNode):
-    def __init__(self, name, dataset, edgename):
+    def __init__(self, name, dataset=[], edgename=None, node_result=None):
         super(DecisionTreeNode, Tree.TreeNode.__init__(self, name))
         self.dataset = dataset
         self.edgename = edgename
+        self.node_result = node_result
 
 
 class DecisonTree(Tree.MultiTree):
@@ -38,7 +39,6 @@ class DecisonTree(Tree.MultiTree):
 
 class BuildTree(object):
     def __init__(self, root_name, dataset, features):
-        # super(BuildTree, self).__init__(*args))
         self.root_name = root_name
         self.datapool = dataset
         self.features = features
@@ -49,11 +49,13 @@ class BuildTree(object):
         attribute_num = len(data[features[-1]])
         label_entropy = 0
         label_counter = Counter(data[features[-1]])
+        if len(label_counter) == 1:
+            return label_entropy, attribute_num, list(label_counter.keys())[0]
         for l, l_counter in label_counter.items():
             label_entropy -= (l_counter / attribute_num) * \
                 math.log((l_counter / attribute_num), 2)
         print("label's entropy:", label_entropy)
-        return label_entropy, attribute_num
+        return label_entropy, attribute_num, None
 
     def information_entropy(self, data, feature, attribute):
         sub_attribute_entropy = {}
@@ -80,8 +82,12 @@ class BuildTree(object):
 
     def split_data(self, node):
         data = node.dataset
-        label_entropy, attribute_num = self.count_label_entropy(
+        label_entropy, attribute_num, if_unique = self.count_label_entropy(
             data, self.features)
+        if if_unique:
+            node.name = node.edgename
+            node.node_result = if_unique
+            return 1
         best_gain = 0
         best_feature = 0
         for feature in self.features[:-1]:
@@ -95,58 +101,30 @@ class BuildTree(object):
         split_data_dict = data.groupby(splitname)
         self.features.remove(splitname)
         node.name = splitname
-        node_id = 0
         for split_attr, spli_value in split_data_dict:
-            new_node = DecisionTreeNode(
-                name=str(node_id), dataset=spli_value, edgename=split_attr)
+            if len(spli_value) == 0:
+                # 因为当前结点包含的样本集为空集，不能划分，对应的处理措施为：将其设置为叶节点，类别为设置为其父节点所含样本最多的类别
+                node_result = sorted(dict(Counter(
+                    node.dataset[self.features[-1]])).items(), key=lambda x: x[1], reverse=True)[0][0]
+                new_node = DecisionTreeNode(
+                    name=split_attr, dataset=spli_value, edgename=split_attr, node_result=node_result)
+            else:
+                new_node = DecisionTreeNode(
+                    name=split_attr, dataset=spli_value, edgename=split_attr) #TODO
             del spli_value[splitname]
             self.dt.add(new_node, parent=node)
-            node_id += 1
         for child_node in node.children:
-            print(child_node.dataset)
-            print(self.features)
             self.split_data(child_node)
 
     def build(self):
         node = self.dt.tree
         self.split_data(node)
-        # self.dt.show_tree()
-        # for data in self.datapool:
-        # for node, value in self.tree.items():
-        #     data = value['data']
-        #     child = value['child']
-        #     label_entropy, attribute_num = self.count_label_entropy(
-        #         data, self.features)
-        #     print(label_entropy)
-        #     best_gain = 0
-        #     best_feature = 0
-        #     for feature in self.features[:-1]:
-        #         current_gain = self.information_gain(
-        #             data, feature, label_entropy, attribute_num)
-        #         if current_gain > best_gain:
-        #             best_gain = current_gain
-        #             best_feature = feature
-        #     splitname = best_feature
-        #     split_data = data.groupby(splitname)
-        #     split_attr_dcit = {}
-        #     self.features.remove(splitname)
-        #     pt(self.features)
-        #     for split_attr, spli_value in split_data:
-        #         split_attr_dcit[split_attr] = {}
-        #         pt(split_attr)
-        #         del spli_value[splitname]
-        #         child[split_attr] = spli_value
-        # pt(self.tree)
-        pass
 
 
 def main():
     dataset, features = load_data()
     bt = BuildTree('root', dataset, features)
     bt.build()
-    # dtn = DecisionTreeNode('a', 'b', 'c')
-    # dt = DecisonTree()
-    # print(dt.if_node_exist)
 
 
 if __name__ == '__main__':
