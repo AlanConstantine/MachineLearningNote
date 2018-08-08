@@ -26,3 +26,6 @@ Plan List:
 * Adaboost
 * xgboost
 * GBDT
+* SVG
+* PCA
+* LDA
