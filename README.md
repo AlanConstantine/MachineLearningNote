@@ -9,7 +9,11 @@ Python版本：3.5.3、3.6.2
 现有：
 * [贝叶斯推断](https://github.com/AlanConstantine/MachineLearningNote/tree/master/BayesianInference)
 * [Canopy](https://github.com/AlanConstantine/MachineLearningNote/tree/master/Canopy)
+<<<<<<< HEAD
 * [决策树](https://github.com/AlanConstantine/MachineLearningNote/tree/master/DecisionTree)
+=======
+* [决策树](https://github.com/AlanConstantine/MachineLearningNote/tree/develop/DecisionTree)
+>>>>>>> develop
 * [指数平滑模型](https://github.com/AlanConstantine/MachineLearningNote/tree/master/ExponentialSmoothing)
 * [梯度下降](https://github.com/AlanConstantine/MachineLearningNote/tree/master/GradientDescent)
 * [K-NN](https://gihttps://github.com/AlanConstantine/MachineLearningNote/tree/master/Canopythub.com/AlanConstantine/MachineLearningNote/tree/master/KNN)
@@ -17,3 +21,15 @@ Python版本：3.5.3、3.6.2
 * [logistic回归](https://github.com/AlanConstantine/MachineLearningNote/tree/master/LogisticRegression)
 * [多叉树](https://github.com/AlanConstantine/MachineLearningNote/tree/master/MultiwayTree)
 * [单遍聚类](https://github.com/AlanConstantine/MachineLearningNote/tree/master/SinglePass)
+
+
+Plan List:
+* svm
+* NeuralNet
+* Random Forest
+* Adaboost
+* xgboost
+* GBDT
+* SVG
+* PCA
+* LDA
