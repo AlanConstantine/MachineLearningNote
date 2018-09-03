@@ -21,7 +21,7 @@ Python版本：3.5.3、3.6.2
 
 Plan List:
 * svm
-* NeuralNet
+* NeuralNetwork
 * Random Forest
 * Adaboost
 * xgboost
