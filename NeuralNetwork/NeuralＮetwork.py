@@ -2,6 +2,7 @@
 # @Author: Alan Lau
 # @Date  : 2018-09-02 17:58:35
 
+import math
 import numpy as np
 
 
@@ -25,8 +26,12 @@ class Perception(object):
         self.active_result = sigmoid(np.sum(self.theta.dot(x.T)) + self.bias)
         return self.active_result
 
-    def bw_percept(self, x_delta):
-        return x_delta * derivative_sigmoid(self.active_result)
+    def bw_percept(self, x_delta, if_output_layer=False):
+        if if_output_layer:
+            x_error = x_delta
+        else:
+            x_error = x_delta.dot(self.theta.T)
+        return x_error * derivative_sigmoid(self.active_result)
 
     def update_weight(self, last_layer_delta):
         self.theta += self.input_x.T.dot(last_layer_delta)
@@ -42,10 +47,11 @@ class Layer(object):
             layer_output.append(perception.percept(x))
         return np.array(forward_layer_output)
 
-    def backward(self, x_delta):
+    def backward(self, x_delta, if_ouput_layer):
         backward_layer_output = []
         for perception in self.perceptions:
-            backward_layer_output.append(perception.bw_percept(x_delta))
+            backward_layer_output.append(
+                perception.bw_percept(x_delta, if_ouput_layer))
         return backward_layer_output
 
     def update_perception_weight(self, last_layer_delta):
@@ -59,21 +65,33 @@ class NeuralNetwork(object):
         self.Y_train = np.array(Y_train, dtype=float)
         self.inputSize = self.X_train.shape[-1]
         self.outputSize = self.Y_train.shape[-1]
-        self.inputLayer = Layer(self.inputSize)
         self.outputLayer = Layer(self.outputSize)
-        self.hidden_layers = []
-        self.layers = self.combo_layers()
+        self.layers = [self.outputLayer]
+        self.use_expericence_layers()
 
-    def combo_layers(self):
-        layers = [self.inputLayer]
-        if len(self.hidden_layers) != 0:
-            layers.extend(self.hidden_layers)
-        layers.append(self.outputLayer)
-        return layers
+    def use_expericence_layers(self):
+        hidden_layers_num = int(
+            math.sqrt(self.inputSize + self.outputSize) + 2) + 1
+        for i in range(hidden_layers_num):
+            self.layers.insert(0, Layer())
 
     def add_hidden_layer(self, hidden_layer):
-        self.hidden_layers.append(hidden_layer)
-        self.layers = self.combo_layers()
+        self.hidden_layers.insert(0, hidden_layer)
+
+    def remove_hidden_layer(self, remove_hidden_layer_num):
+        if remove_hidden_layer_num == len(self.layers) - 1 or remove_hidden_layer_num == -1:
+            print('[Error]Can not remove output layer.')
+        if len(self.layers) <= 2:
+            print('[Error]Can not remove layer anymore.')
+        del self.layers[remove_hidden_layer_num]
+
+    def show_layers(self):
+        print("Input layer's perceptions' number:", self.inputSize)
+        i = 0
+        for layer in self.layers[:-1]:
+            print("Layer %s's perceptions' number: %s",
+                  (str(i), str(len(layer))))
+         print("Output layer's perceptions' number:", self.outputSize)
 
     def forward(self):
         layer_ouput = self.layers[0].forward(self.X_train)
@@ -86,7 +104,10 @@ class NeuralNetwork(object):
         inverse_layers = (self.layers[::-1])[1:]
         for i in range(len(inverse_layers)):
             inverse_layer = inverse_layers[i]
-            output_error = inverse_layer.backward(output_error)
+            if i==0:
+                output_error = inverse_layer.backward(output_error,if_ouput_layer=True)
+            else:
+                output_error = inverse_layer.backward(output_error)
             if i + 1 < len(inverse_layer):
                 next_inverse_layer = inverse_layer[i + 1]
                 next_inverse_layer.update_perception_weight(output_error)
