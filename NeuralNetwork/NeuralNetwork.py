@@ -4,6 +4,7 @@
 
 import math
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def sigmoid(z):
@@ -16,20 +17,20 @@ def derivative_sigmoid(z):
 
 class Perception(object):
 
-    def __init__(self, theta=0, bias=0):
-        self.theta = theta
-        self.bias = bias
+    def __init__(self, inputSize, alpha=0.2):
+        self.theta = np.random.randn(inputSize)
+        self.alpha = alpha
         self.active_result = None
         self.input_x = None
 
     def percept(self, input_x):
         self.input_x = input_x
-        self.active_result = sigmoid(np.sum(self.theta.dot(x.T)) + self.bias)
+        self.active_result = sigmoid(self.theta.dot(input_x.T))
         return self.active_result
 
     def bw_percept(self, x_delta):
-        self.theta += self.input_x.T.dot(x_delta)
-        x_error = x_delta.dot(self.theta.T)
+        self.theta += self.alpha * (x_delta * self.input_x)
+        x_error = x_delta * self.theta
         perception_delta = x_error * \
             derivative_sigmoid(self.active_result)
         return perception_delta
@@ -37,20 +38,33 @@ class Perception(object):
 
 class Layer(object):
 
-    def __init__(self, perception_num=3):
-        self.perceptions = [Perception() for i in perception_num]
+    def __init__(self):
+        self.perceptions = None
+        self.inputSize = 3
+        self.perception_num = 3
+
+    def set_inputSize(self, inputSize):
+        self.inputSize = inputSize
+
+    def set_perceptionsNum(self, perception_num):
+        self.perception_num = perception_num
+
+    def set_perceptions(self):
+        self.perceptions = [Perception(inputSize=self.inputSize)
+                            for i in range(self.perception_num)]
+        return self.perception_num
 
     def forward(self, x):
         forward_layer_output = []
         for perception in self.perceptions:
-            layer_output.append(perception.percept(x))
+            forward_layer_output.append(perception.percept(x))
         return np.array(forward_layer_output)
 
-    def backward(self, x_delta, if_ouput_layer):
+    def backward(self, x_delta):
         backward_layer_output = []
         for perception in self.perceptions:
             backward_layer_output.append(
-                perception.bw_percept(x_delta, if_ouput_layer))
+                perception.bw_percept(x_delta))
         return backward_layer_output
 
     def update_perception_weight(self, last_layer_delta):
@@ -65,15 +79,27 @@ class NeuralNetwork(object):
         self.Y_train = np.array(Y_train, dtype=float)
         self.inputSize = self.X_train.shape[-1]
         self.outputSize = self.Y_train.shape[-1]
-        self.outputLayer = Layer(self.outputSize)
-        self.layers = [self.outputLayer]
-        self.use_expericence_layers()
+        self.layers = []
+
+        firstLayer = Layer()
+        firstLayer.set_inputSize(self.inputSize)
+        perception_num = firstLayer.set_perceptions()
+
+        outputLayer = Layer()
+        outputLayer.set_perceptionsNum(self.outputSize)
+        outputLayer.set_perceptions()
+
+        self.layers = [firstLayer, outputLayer]
+
+        for layer in self.layers[1:]:
+            layer.set_inputSize(perception_num)
+            perception_num = layer.set_perceptions()
 
     def use_expericence_layers(self):
         hidden_layers_num = int(
-            math.sqrt(self.inputSize + self.outputSize) + 2) + 1
+            math.sqrt(self.inputSize + self.outputSize) + 2)
         for i in range(hidden_layers_num):
-            self.layers.insert(0, Layer())
+            self.layers.insert(1, Layer())
 
     def add_hidden_layer(self, hidden_layer):
         self.hidden_layers.insert(0, hidden_layer)
@@ -89,29 +115,59 @@ class NeuralNetwork(object):
         print("Input layer's perceptions' number:", self.inputSize)
         i = 0
         for layer in self.layers[:-1]:
-            print("Layer %s's perceptions' number: %s",
-                  (str(i), str(len(layer))))
-         print("Output layer's perceptions' number:", self.outputSize)
+            print("Layer %s's perceptions' number: %s" %
+                  (str(i), str(len(layer.perceptions))))
+        print("Output layer's perceptions' number:", self.outputSize)
 
-    def forward(self):
-        layer_ouput = self.layers[0].forward(self.X_train)
+    def forward(self, x):
+        layer_ouput = self.layers[0].forward(x)
         for layer in self.layers[1:]:
             layer_ouput = layer.forward(layer_ouput)
         return layer_ouput
 
-    def backward(self, layer_output):
-        output_error = self.Y_train - layer_output
-        output_delta=output_error*derivative_sigmoid(layer_output)
+    def backward(self, layer_output, y):
+        output_error = y - layer_output
+        output_delta = output_error * derivative_sigmoid(layer_output)
         inverse_layers = (self.layers[::-1])[1:]
         for i in range(len(inverse_layers)):
             inverse_layer = inverse_layers[i]
             output_delta = inverse_layer.backward(output_delta)
 
+    def train(self, iterate_num=100):
+        iterate_axis = []
+        loss_axis = []
+        for i in range(iterate_num):
+            total_error = 0
+            for j in range(len(self.X_train)):
+                x, y = self.X_train[j], self.Y_train[j]
+                layer_output = self.forward(x)
+                self.backward(layer_output, y)
+                total_error += (y - layer_output)
+
+            loss = ((total_error**2) / 2)[0]
+            # print('Loss:', loss)
+
+            iterate_axis.append(i + 1)
+            loss_axis.append(loss)
+        return iterate_axis, loss_axis
+
+    def show_gradient(self, iterate_axis, loss_axis):
+        plt.plot(iterate_axis, loss_axis, color='blue')
+        plt.xlabel('Iterate number')
+        plt.ylabel('Loss')
+        plt.show()
+
+    def predict(self):
+        pass
+
 
 def main():
-    pass
+    X = [[1, 1], [1, 0], [0, 1], [0, 0]]
+    Y = [[1], [1], [1], [0]]
+    nn = NeuralNetwork(X, Y)
+    iterate_axis, loss_axis = nn.train(1500)
+    nn.show_gradient(iterate_axis, loss_axis)
 
 
 if __name__ == '__main__':
     main()
-
