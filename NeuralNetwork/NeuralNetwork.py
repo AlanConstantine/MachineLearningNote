@@ -15,6 +15,7 @@ def derivative_sigmoid(z):
 
 
 class Perception(object):
+
     def __init__(self, theta=0, bias=0):
         self.theta = theta
         self.bias = bias
@@ -26,18 +27,16 @@ class Perception(object):
         self.active_result = sigmoid(np.sum(self.theta.dot(x.T)) + self.bias)
         return self.active_result
 
-    def bw_percept(self, x_delta, if_output_layer=False):
-        if if_output_layer:
-            x_error = x_delta
-        else:
-            x_error = x_delta.dot(self.theta.T)
-        return x_error * derivative_sigmoid(self.active_result)
-
-    def update_weight(self, last_layer_delta):
-        self.theta += self.input_x.T.dot(last_layer_delta)
+    def bw_percept(self, x_delta):
+        self.theta += self.input_x.T.dot(x_delta)
+        x_error = x_delta.dot(self.theta.T)
+        perception_delta = x_error * \
+            derivative_sigmoid(self.active_result)
+        return perception_delta
 
 
 class Layer(object):
+
     def __init__(self, perception_num=3):
         self.perceptions = [Perception() for i in perception_num]
 
@@ -60,6 +59,7 @@ class Layer(object):
 
 
 class NeuralNetwork(object):
+
     def __init__(self, X_train, Y_train):
         self.X_train = np.array(X_train, dtype=float)
         self.Y_train = np.array(Y_train, dtype=float)
@@ -101,16 +101,11 @@ class NeuralNetwork(object):
 
     def backward(self, layer_output):
         output_error = self.Y_train - layer_output
+        output_delta=output_error*derivative_sigmoid(layer_output)
         inverse_layers = (self.layers[::-1])[1:]
         for i in range(len(inverse_layers)):
             inverse_layer = inverse_layers[i]
-            if i==0:
-                output_error = inverse_layer.backward(output_error,if_ouput_layer=True)
-            else:
-                output_error = inverse_layer.backward(output_error)
-            if i + 1 < len(inverse_layer):
-                next_inverse_layer = inverse_layer[i + 1]
-                next_inverse_layer.update_perception_weight(output_error)
+            output_delta = inverse_layer.backward(output_delta)
 
 
 def main():
@@ -119,3 +114,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
