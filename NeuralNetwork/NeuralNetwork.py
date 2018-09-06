@@ -17,7 +17,7 @@ def derivative_sigmoid(z):
 
 class Perception(object):
 
-    def __init__(self, inputSize, alpha=0.2):
+    def __init__(self, inputSize, alpha=0.1):
         self.theta = np.random.randn(inputSize)
         self.alpha = alpha
         self.active_result = None
@@ -29,6 +29,7 @@ class Perception(object):
         return self.active_result
 
     def bw_percept(self, x_delta):
+        # print(x_delta.shape)
         self.theta += self.alpha * (x_delta * self.input_x)
         x_error = x_delta * self.theta
         perception_delta = x_error * \
@@ -145,7 +146,7 @@ class NeuralNetwork(object):
                 total_error += (y - layer_output)
 
             loss = ((total_error**2) / 2)[0]
-            # print('Loss:', loss)
+            print('Loss:', loss)
 
             iterate_axis.append(i + 1)
             loss_axis.append(loss)
@@ -162,10 +163,14 @@ class NeuralNetwork(object):
 
 
 def main():
-    X = [[1, 1], [1, 0], [0, 1], [0, 0]]
-    Y = [[1], [1], [1], [0]]
+    # X = [[1, 1], [1, 0], [0, 1], [0, 0]]
+    # Y = [[1], [1], [1], [0]]
+    X = np.array(([2, 9], [1, 5], [3, 6]), dtype=float)
+    Y = np.array(([92], [86], [89]), dtype=float)
+    X = X / np.amax(X, axis=0)
+    Y = Y / 100
     nn = NeuralNetwork(X, Y)
-    iterate_axis, loss_axis = nn.train(1500)
+    iterate_axis, loss_axis = nn.train(10000)
     nn.show_gradient(iterate_axis, loss_axis)
 
 
