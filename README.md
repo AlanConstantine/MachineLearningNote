@@ -17,11 +17,11 @@ Python版本：3.5.3、3.6.2
 * [logistic回归](https://github.com/AlanConstantine/MachineLearningNote/tree/master/LogisticRegression)
 * [多叉树](https://github.com/AlanConstantine/MachineLearningNote/tree/master/MultiwayTree)
 * [单遍聚类](https://github.com/AlanConstantine/MachineLearningNote/tree/master/SinglePass)
+* [BP神经网路](https://github.com/AlanConstantine/MachineLearningNote/tree/develop/NeuralNetwork)
 
 
 Plan List:
 * svm
-* NeuralNetwork
 * Random Forest
 * Adaboost
 * xgboost
