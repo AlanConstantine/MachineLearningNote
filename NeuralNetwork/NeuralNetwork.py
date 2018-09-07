@@ -17,23 +17,26 @@ def derivative_sigmoid(z):
 
 class Perception(object):
 
-    def __init__(self, inputSize, alpha=0.1):
+    def __init__(self, inputSize, alpha=1):
         self.theta = np.random.randn(inputSize)
         self.alpha = alpha
         self.active_result = None
         self.input_x = None
+        self.z = None
 
     def percept(self, input_x):
         self.input_x = input_x
-        self.active_result = sigmoid(self.theta.dot(input_x.T))
-        return self.active_result
+        self.z = self.theta.dot(input_x.T)
+        self.active_result = sigmoid(self.z)
+        return sigmoid(self.z)
 
     def bw_percept(self, x_delta):
-        # print(x_delta.shape)
-        self.theta += self.alpha * (x_delta * self.input_x)
+        # self.theta = self.theta + (self.alpha * (x_delta * self.input_x))
         x_error = x_delta * self.theta
         perception_delta = x_error * \
-            derivative_sigmoid(self.active_result)
+            derivative_sigmoid(self.z)
+
+        self.theta = self.theta + (self.alpha * (x_delta * self.input_x))
         return perception_delta
 
 
@@ -96,29 +99,29 @@ class NeuralNetwork(object):
             layer.set_inputSize(perception_num)
             perception_num = layer.set_perceptions()
 
-    def use_expericence_layers(self):
-        hidden_layers_num = int(
-            math.sqrt(self.inputSize + self.outputSize) + 2)
-        for i in range(hidden_layers_num):
-            self.layers.insert(1, Layer())
+    # def use_expericence_layers(self):
+    #     hidden_layers_num = int(
+    #         math.sqrt(self.inputSize + self.outputSize) + 2)
+    #     for i in range(hidden_layers_num):
+    #         self.layers.insert(1, Layer())
 
-    def add_hidden_layer(self, hidden_layer):
-        self.hidden_layers.insert(0, hidden_layer)
+    # def add_hidden_layer(self, hidden_layer):
+    #     self.hidden_layers.insert(0, hidden_layer)
 
-    def remove_hidden_layer(self, remove_hidden_layer_num):
-        if remove_hidden_layer_num == len(self.layers) - 1 or remove_hidden_layer_num == -1:
-            print('[Error]Can not remove output layer.')
-        if len(self.layers) <= 2:
-            print('[Error]Can not remove layer anymore.')
-        del self.layers[remove_hidden_layer_num]
+    # def remove_hidden_layer(self, remove_hidden_layer_num):
+    #     if remove_hidden_layer_num == len(self.layers) - 1 or remove_hidden_layer_num == -1:
+    #         print('[Error]Can not remove output layer.')
+    #     if len(self.layers) <= 2:
+    #         print('[Error]Can not remove layer anymore.')
+    #     del self.layers[remove_hidden_layer_num]
 
-    def show_layers(self):
-        print("Input layer's perceptions' number:", self.inputSize)
-        i = 0
-        for layer in self.layers[:-1]:
-            print("Layer %s's perceptions' number: %s" %
-                  (str(i), str(len(layer.perceptions))))
-        print("Output layer's perceptions' number:", self.outputSize)
+    # def show_layers(self):
+    #     print("Input layer's perceptions' number:", self.inputSize)
+    #     i = 0
+    #     for layer in self.layers[:-1]:
+    #         print("Layer %s's perceptions' number: %s" %
+    #               (str(i), str(len(layer.perceptions))))
+    #     print("Output layer's perceptions' number:", self.outputSize)
 
     def forward(self, x):
         layer_ouput = self.layers[0].forward(x)
@@ -143,9 +146,9 @@ class NeuralNetwork(object):
                 x, y = self.X_train[j], self.Y_train[j]
                 layer_output = self.forward(x)
                 self.backward(layer_output, y)
-                total_error += (y - layer_output)
+                total_error = total_error + (y - layer_output)
 
-            loss = ((total_error**2) / 2)[0]
+            loss = ((total_error**2) / len(self.X_train))[0]
             print('Loss:', loss)
 
             iterate_axis.append(i + 1)
@@ -170,7 +173,7 @@ def main():
     X = X / np.amax(X, axis=0)
     Y = Y / 100
     nn = NeuralNetwork(X, Y)
-    iterate_axis, loss_axis = nn.train(10000)
+    iterate_axis, loss_axis = nn.train(150)
     nn.show_gradient(iterate_axis, loss_axis)
 
 
