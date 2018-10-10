@@ -8,7 +8,7 @@ from pprint import pprint
 
 
 def load_simp_data():
-    datMat = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    data = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
     class_labels = np.array([1, 1, 1, -1, -1, -1, 1, 1, 1, -1])
     return datMat, class_labels
 
