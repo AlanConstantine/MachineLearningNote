@@ -99,30 +99,6 @@ class NeuralNetwork(object):
             layer.set_inputSize(perception_num)
             perception_num = layer.set_perceptions()
 
-    # def use_expericence_layers(self):
-    #     hidden_layers_num = int(
-    #         math.sqrt(self.inputSize + self.outputSize) + 2)
-    #     for i in range(hidden_layers_num):
-    #         self.layers.insert(1, Layer())
-
-    # def add_hidden_layer(self, hidden_layer):
-    #     self.hidden_layers.insert(0, hidden_layer)
-
-    # def remove_hidden_layer(self, remove_hidden_layer_num):
-    #     if remove_hidden_layer_num == len(self.layers) - 1 or remove_hidden_layer_num == -1:
-    #         print('[Error]Can not remove output layer.')
-    #     if len(self.layers) <= 2:
-    #         print('[Error]Can not remove layer anymore.')
-    #     del self.layers[remove_hidden_layer_num]
-
-    # def show_layers(self):
-    #     print("Input layer's perceptions' number:", self.inputSize)
-    #     i = 0
-    #     for layer in self.layers[:-1]:
-    #         print("Layer %s's perceptions' number: %s" %
-    #               (str(i), str(len(layer.perceptions))))
-    #     print("Output layer's perceptions' number:", self.outputSize)
-
     def forward(self, x):
         layer_ouput = self.layers[0].forward(x)
         for layer in self.layers[1:]:
@@ -163,6 +139,30 @@ class NeuralNetwork(object):
 
     def predict(self):
         pass
+
+ # def use_expericence_layers(self):
+    #     hidden_layers_num = int(
+    #         math.sqrt(self.inputSize + self.outputSize) + 2)
+    #     for i in range(hidden_layers_num):
+    #         self.layers.insert(1, Layer())
+
+    # def add_hidden_layer(self, hidden_layer):
+    #     self.hidden_layers.insert(0, hidden_layer)
+
+    # def remove_hidden_layer(self, remove_hidden_layer_num):
+    #     if remove_hidden_layer_num == len(self.layers) - 1 or remove_hidden_layer_num == -1:
+    #         print('[Error]Can not remove output layer.')
+    #     if len(self.layers) <= 2:
+    #         print('[Error]Can not remove layer anymore.')
+    #     del self.layers[remove_hidden_layer_num]
+
+    # def show_layers(self):
+    #     print("Input layer's perceptions' number:", self.inputSize)
+    #     i = 0
+    #     for layer in self.layers[:-1]:
+    #         print("Layer %s's perceptions' number: %s" %
+    #               (str(i), str(len(layer.perceptions))))
+    #     print("Output layer's perceptions' number:", self.outputSize)
 
 
 def main():
