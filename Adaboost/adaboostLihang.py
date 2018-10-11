@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # @Author: Alan Lau
-# @Date: 2018-09-24 17:05:38
+# @Date: 2018-10-11 10:59:38
 
 import math
 import numpy as np
@@ -10,7 +10,7 @@ from pprint import pprint
 def load_simp_data():
     data = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
     class_labels = np.array([1, 1, 1, -1, -1, -1, 1, 1, 1, -1])
-    return datMat, class_labels
+    return data, class_labels
 
 
 class Adaboost(object):
@@ -26,12 +26,12 @@ class Adaboost(object):
                              2 for i in range(self.n) if i+1 <= self.n-1]
 
     def stump(self, sign, split_point):
-        preLabel = np.array([1]*self.n)
+        pre_label = np.array([1]*self.n)
         if sign == '<':
-            preLabel[self.data < split_point] = -1
+            pre_label[self.data < split_point] = -1
         else:
-            preLabel[self.data >= split_point] = -1
-        return preLabel
+            pre_label[self.data >= split_point] = -1
+        return pre_label
 
     def find_split_point(self):
         min_error = np.inf
@@ -48,7 +48,6 @@ class Adaboost(object):
                     weak_classifier['split_point'] = split_point
                     weak_classifier['sign'] = sign
                     weak_classifier['result'] = pre_label
-                    weak_classifier['weight'] = weighted_err
         return weak_classifier
 
     def normalizing(self, alpha, G):
