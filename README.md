@@ -2,11 +2,16 @@
 
 使用python实现各种机器学习算法
 
-OS：Windows 10、Ubuntu、 MaxOS
+### OS
+* Windows 10
+* Ubuntu 16.04
+* MaxOS 10
 
-Python版本：3.5.3、3.6.2
+### Requirements
+* Python 3
+* requirement.txt
 
-现有：
+### To Do List
 * [贝叶斯推断BayesianInference](https://github.com/AlanConstantine/MachineLearningNote/tree/master/BayesianInference)
 * [预聚类Canopy](https://github.com/AlanConstantine/MachineLearningNote/tree/master/Canopy)
 * [决策树DecisionTree](https://github.com/AlanConstantine/MachineLearningNote/tree/master/DecisionTree)
@@ -22,7 +27,7 @@ Python版本：3.5.3、3.6.2
 * [主成分分析PCA](https://github.com/AlanConstantine/MachineLearningNote/tree/master/PCA)
 * [奇异值分解SVD](https://github.com/AlanConstantine/MachineLearningNote/tree/master/SVD)
 
-Plan List:
+### Plan List
 * SVM
 * Random Forest
 * Xgboost
