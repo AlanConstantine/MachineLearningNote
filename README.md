@@ -11,7 +11,7 @@
 * Python 3
 * requirement.txt
 
-### To Do List
+### Current List
 * [贝叶斯推断BayesianInference](https://github.com/AlanConstantine/MachineLearningNote/tree/master/BayesianInference)
 * [预聚类Canopy](https://github.com/AlanConstantine/MachineLearningNote/tree/master/Canopy)
 * [决策树DecisionTree](https://github.com/AlanConstantine/MachineLearningNote/tree/master/DecisionTree)
@@ -27,7 +27,7 @@
 * [主成分分析PCA](https://github.com/AlanConstantine/MachineLearningNote/tree/master/PCA)
 * [奇异值分解SVD](https://github.com/AlanConstantine/MachineLearningNote/tree/master/SVD)
 
-### Plan List
+### TO DO List
 * SVM
 * Random Forest
 * Xgboost
