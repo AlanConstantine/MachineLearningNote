@@ -8,16 +8,17 @@ from pprint import pprint
 
 
 def load_simp_data():
-    data = np.matrix([[1, 2.1],
-                      [2, 1.1],
-                      [1.3, 1],
-                      [1, 1],
-                      [2, 1]])
+    data = np.matrix([[1, 2.1, 1],
+                      [2, 1.1, 5],
+                      [1.3, 1, 9],
+                      [1, 1, 6],
+                      [2, 1, 8]])
     class_labels = np.array([1, 1, -1, -1, 1])
     return data, class_labels
 
 
 class Adaboost(object):
+
     def __init__(self, data, class_labels, iter_num):
         self.data = data
         self.class_labels = class_labels
@@ -41,8 +42,8 @@ class Adaboost(object):
         for d in range(self.n):
             attribute = self.data[:, d]
             sorted_data = sorted(attribute)
-            split_points = [(sorted_data[i]+sorted_data[i+1]) /
-                            2 for i in range(self.m) if i+1 <= self.m-1]
+            split_points = [(sorted_data[i] + sorted_data[i + 1]) /
+                            2 for i in range(self.m) if i + 1 <= self.m - 1]
             for split_point in split_points:
                 for sign in ['<', '>=']:
                     pre_label = self.stump(sign, split_point, attribute)
@@ -65,7 +66,7 @@ class Adaboost(object):
             w = (np.array(self.D.T)[0])[j]
             y = self.class_labels[j]
             g = G[j]
-            z.append(w*np.exp(-1*alpha*y*G))
+            z.append(w * np.exp(-1 * alpha * y * G))
         return np.sum(z)
 
     def update_weight(self, weak_classifier):
@@ -76,7 +77,7 @@ class Adaboost(object):
             old_w = self.D[i]
             y = self.class_labels[i]
             g = G[i]
-            new_w = (old_w/Z)*np.exp(-1*alpha*y*g)
+            new_w = (old_w / Z) * np.exp(-1 * alpha * y * g)
             self.D[i] = new_w
         # print('The weight of data has been updated:\n', self.D, '\n')
 
@@ -84,7 +85,7 @@ class Adaboost(object):
         for iterator in range(self.iter_num):
             weak_classifier = self.find_split_point()
             current_err = weak_classifier['error']
-            alpha = 0.5*math.log((1-current_err)/current_err)
+            alpha = 0.5 * math.log((1 - current_err) / current_err)
             weak_classifier['alpha'] = alpha
             self.update_weight(weak_classifier)
             self.classifier.append(weak_classifier)
@@ -111,15 +112,14 @@ class Adaboost(object):
             else:
                 if x[d] >= split_point:
                     y = -1
-            f += alpha*y
+            f += alpha * y
         result = self.sig(f)
-        # print(result)
         return result
 
 
 def main():
     data, class_labels = load_simp_data()
-    ada = Adaboost(data, class_labels, 3)
+    ada = Adaboost(data, class_labels, 100)
     ada.train()
 
     err = 0
@@ -127,7 +127,7 @@ def main():
         y = ada.test(data[i])
         if y != class_labels[i]:
             err += 1
-    print(err/len(data))
+    print(err / len(data))
 
 
 if __name__ == '__main__':
