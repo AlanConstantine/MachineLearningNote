@@ -36,3 +36,4 @@
 * Xgboost
 * GBDT
 * LDA
+* SGD
