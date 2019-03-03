@@ -15,6 +15,7 @@
 * [贝叶斯推断BayesianInference](https://github.com/AlanConstantine/MachineLearningNote/tree/master/BayesianInference)
 * [预聚类Canopy](https://github.com/AlanConstantine/MachineLearningNote/tree/master/Canopy)
 * [决策树DecisionTree](https://github.com/AlanConstantine/MachineLearningNote/tree/master/DecisionTree)
+	* 待找出更好的实现方式，可能会参考《机器学习实战》一书的代码
 * [指数平滑模型ExponentialSmoothing](https://github.com/AlanConstantine/MachineLearningNote/tree/master/ExponentialSmoothing)
 * [梯度下降GradientDescent](https://github.com/AlanConstantine/MachineLearningNote/tree/master/GradientDescent)
 * [K近邻KNN](https://github.com/AlanConstantine/MachineLearningNote/tree/master/KNN)
@@ -23,7 +24,9 @@
 * [多叉树MultiwayTree](https://github.com/AlanConstantine/MachineLearningNote/tree/master/MultiwayTree)
 * [单遍聚类SinglePass](https://github.com/AlanConstantine/MachineLearningNote/tree/master/SinglePass)
 * [BP神经网路NeuralNetwork](https://github.com/AlanConstantine/MachineLearningNote/tree/master/NeuralNetwork)
+	* ```NeuralNetwork.py```待完善。
 * [Adaboost](https://github.com/AlanConstantine/MachineLearningNote/tree/master/Adaboost)
+	* ```adaboostMultiDimension.py```待完善，每次运行误差都为0.2，代码有bug，正在解决
 * [主成分分析PCA](https://github.com/AlanConstantine/MachineLearningNote/tree/master/PCA)
 * [奇异值分解SVD](https://github.com/AlanConstantine/MachineLearningNote/tree/master/SVD)
 
