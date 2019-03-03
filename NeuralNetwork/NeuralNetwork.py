@@ -89,7 +89,7 @@ class NeuralNetwork(object):
 
     def backward(self, layer_output):
         output_error = self.Y_train - layer_output
-        output_delta = output_error*derivative_sigmoid(layer_output)
+        output_delta = output_error * derivative_sigmoid(layer_output)
         inverse_layers = (self.layers[::-1])[1:]
         for i in range(len(inverse_layers)):
             inverse_layer = inverse_layers[i]
@@ -119,10 +119,10 @@ class NeuralNetwork(object):
         plt.ylabel('Loss')
         plt.show()
 
-    def predict(self):
-        pass
+    # def predict(self):
+    #     pass
 
- # def use_expericence_layers(self):
+    # def use_expericence_layers(self):
     #     hidden_layers_num = int(
     #         math.sqrt(self.inputSize + self.outputSize) + 2)
     #     for i in range(hidden_layers_num):
