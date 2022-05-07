@@ -12,6 +12,8 @@
 * requirement.txt
 
 ### Current List
+* [Transformer](https://github.com/AlanConstantine/MachineLearningNote/tree/master/Transformer)
+  * [Attention](https://github.com/AlanConstantine/MachineLearningNote/blob/master/Transformer/attention.ipynb)
 * [贝叶斯推断BayesianInference](https://github.com/AlanConstantine/MachineLearningNote/tree/master/BayesianInference)
 * [预聚类Canopy](https://github.com/AlanConstantine/MachineLearningNote/tree/master/Canopy)
 * [决策树DecisionTree](https://github.com/AlanConstantine/MachineLearningNote/tree/master/DecisionTree)
